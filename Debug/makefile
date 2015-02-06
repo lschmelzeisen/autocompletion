@@ -47,7 +47,7 @@ all: autocompletion
 autocompletion: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++  -o "autocompletion" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -std=c++11 -o "autocompletion" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
