@@ -14,3 +14,6 @@
 *.a
 /data
 gmon.out
+
+# CMake build directory
+/build
