@@ -79,7 +79,7 @@ struct PackedNode {
 	 * Stores the characters of this node in the trie, the score difference to the parent
 	 * node and the relative pointer to the first child.
 	 */
-	char characters_deltaScore_firstChildOffset_[];
+	char characters_deltaScore_firstChildOffset_[1];
 
 	/**
 	 * Returns the pointer to the character array
