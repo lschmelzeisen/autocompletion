@@ -1,6 +1,6 @@
 # Autocompletion
 
-A fast top-k completion based on a compressed trie (from the [B.-J. Hsu and G. Ottaviano's paper *Space Efficient Data Structures from Top-k Completion*](http://www.di.unipi.it/~ottavian/files/topk_completion_www13.pdf)).
+A fast top-k completion based on a compressed trie (from the [*Space Efficient Data Structures from Top-k Completion* paper by B.-J. Hsu and G. Ottaviano](http://www.di.unipi.it/~ottavian/files/topk_completion_www13.pdf)).
 
 Queries can be directed via ØMQ over a sockjsproxy (https://bitbucket.org/vladev/sockjsproxy) directly from the web browser.
 
