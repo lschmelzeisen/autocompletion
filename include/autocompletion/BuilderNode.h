@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-#include "PackedNode.h"
+#include <autocompletion/PackedNode.h>
 
 class BuilderNode;
 

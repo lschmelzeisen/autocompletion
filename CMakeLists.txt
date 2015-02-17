@@ -19,6 +19,8 @@ set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE} CACHE STRING "")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
+list(APPEND AUTOCOMPLETION_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/include/")
+
 # ------------------------------------------------------------------------------
 # Build Settings
 
@@ -53,18 +55,7 @@ if(COMPILER_GNU_COMPATIBLE)
 endif()
 
 # ------------------------------------------------------------------------------
-# Dependencies
+# Build subprojects 
 
-# --- Boost
-find_package(Boost 1.57 COMPONENTS system filesystem program_options REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-
-# --- ZeroMQ
-# see: http://zeromq.org/bindings:c
-find_package(ZeroMQ REQUIRED)
-include_directories(${ZeroMQ_INCLUDE_DIRS})
-
-# ------------------------------------------------------------------------------
-# Build source
-
-add_subdirectory("src/")
+add_subdirectory("autocompletion-lib/")
+add_subdirectory("autocompletion-server/")

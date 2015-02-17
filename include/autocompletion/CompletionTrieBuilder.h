@@ -15,8 +15,8 @@
 #include <string>
 #include <vector>
 
-#include "BuilderNode.h"
-#include "SuggestionList.h"
+#include <autocompletion/BuilderNode.h>
+#include <autocompletion/SuggestionList.h>
 
 class BuilderNode;
 
@@ -36,7 +36,7 @@ public:
 	void addString(std::string str, u_int32_t score,
 			std::string additionalData);
 	CompletionTrie* generateCompletionTrie();
-	void print();
+	void print(bool verbose);
 	void printNode(BuilderNode* node, std::deque<BuilderNode*> locus);
 
 	float getAverageCharsPerNode() {

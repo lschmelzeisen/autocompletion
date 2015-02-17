@@ -5,7 +5,7 @@
  *      Author: Jonas Kunze
  */
 
-#include "BuilderNode.h"
+#include <autocompletion/BuilderNode.h>
 
 bool BuilderNodeComparator::operator()(const BuilderNode* left,
 		const BuilderNode* right) {

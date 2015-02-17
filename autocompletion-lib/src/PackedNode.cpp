@@ -5,7 +5,8 @@
  *      Author: Jonas Kunze
  */
 
-#include "PackedNode.h"
+#include <autocompletion/PackedNode.h>
+
 #include <stdlib.h>
 #include <cstring>
 

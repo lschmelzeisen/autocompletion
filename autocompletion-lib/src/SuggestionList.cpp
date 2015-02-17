@@ -5,11 +5,11 @@
  *      Author: Jonas Kunze
  */
 
-#include "SuggestionList.h"
+#include <autocompletion/SuggestionList.h>
 
-#include "CompletionTrie.h"
-#include "PackedNode.h"
-#include "SuggestionStore.h"
+#include <autocompletion/CompletionTrie.h>
+#include <autocompletion/PackedNode.h>
+#include <autocompletion/SuggestionStore.h>
 
 void SuggestionList::addSuggestion(NodeWithRelativeScoreStore nodeWithParent) {
 	suggestedWords.push_back(

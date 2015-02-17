@@ -5,7 +5,7 @@
  *      Author: Jonas Kunze
  */
 
-#include "CompletionTrieBuilder.h"
+#include <autocompletion/CompletionTrieBuilder.h>
 
 #include <algorithm>
 #include <cctype>
@@ -15,15 +15,15 @@
 #include <iostream>
 #include <iterator>
 #include <set>
+#include <sstream>
 #include <utility>
 
-#include "../options/Options.h"
-#include "../utils/Utils.h"
-#include "BuilderNode.h"
-#include "CompletionTrie.h"
-#include "PackedNode.h"
-#include "SuggestionList.h"
-#include "SuggestionStore.h"
+#include <autocompletion/BuilderNode.h>
+#include <autocompletion/CompletionTrie.h>
+#include <autocompletion/PackedNode.h>
+#include <autocompletion/SuggestionList.h>
+#include <autocompletion/SuggestionStore.h>
+#include <autocompletion/utils/Utils.h>
 
 #define MAXIMUM_PREFIX_SIZE 7
 
@@ -393,8 +393,8 @@ std::stack<BuilderNode*> CompletionTrieBuilder::findLocus(
 	return resultLocus;
 }
 
-void CompletionTrieBuilder::print() {
-	if (!Options::VERBOSE) {
+void CompletionTrieBuilder::print(bool verbose) {
+	if (!verbose) {
 		return;
 	}
 	std::cout << "============ CompletionTrieBuilder ============" << std::endl;

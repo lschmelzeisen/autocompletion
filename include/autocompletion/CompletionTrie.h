@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-#include "PackedNode.h"
+#include <autocompletion/PackedNode.h>
 
 class SuggestionStore;
 
@@ -58,7 +58,7 @@ public:
 	std::shared_ptr<SuggestionList> getSuggestions(std::string prefix,
 			const int k) const;
 
-	void print() const;
+	void print(bool verbose) const;
 
 	u_int64_t getMemoryConsumption() const {
 		return memSize;

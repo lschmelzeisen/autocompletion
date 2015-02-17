@@ -24,10 +24,11 @@
 #include <string>
 #include <thread>
 
-#include "../storage/CompletionTrie.h"
-#include "../storage/CompletionTrieBuilder.h"
-#include "../storage/SuggestionList.h"
-#include "../options/Options.h"
+#include <autocompletion/CompletionTrie.h>
+#include <autocompletion/CompletionTrieBuilder.h>
+#include <autocompletion/SuggestionList.h>
+
+#include "options/Options.h"
 
 CompletionServer::CompletionServer() :
 		builderThread_(&CompletionServer::builderThread, this) {
@@ -167,7 +168,7 @@ void CompletionServer::builderThread() {
 			}
 			CompletionTrieBuilder* builder = new CompletionTrieBuilder();
 			builders[index] = builder;
-			builder->print();
+			builder->print(Options::VERBOSE);
 		} else if (msgType == BUILDER_MSG_STOP_BULK) {
 			std::cout << "Received Stop Bulk command for index " << index
 					<< std::endl;
@@ -177,7 +178,7 @@ void CompletionServer::builderThread() {
 						<< "Trying to finish Trie building but no CompletionTrieBuilder exists for index "
 						<< index << "!" << std::endl;
 			} else {
-				builder->print();
+				builder->print(Options::VERBOSE);
 
 				std::map<uint64_t, CompletionTrie*>::iterator lb =
 						trieByIndex.lower_bound(index);

@@ -5,17 +5,16 @@
  *      Author: Jonas Kunze
  */
 
-#include "CompletionTrie.h"
+#include <autocompletion/CompletionTrie.h>
 
 #include <algorithm>
 #include <cctype>
 #include <iostream>
 #include <iterator>
 
-#include "../options/Options.h"
-#include "SuggestionList.h"
-#include "SuggestionStore.h"
-#include "../utils/Utils.h"
+#include <autocompletion/SuggestionList.h>
+#include <autocompletion/SuggestionStore.h>
+#include <autocompletion/utils/Utils.h>
 
 struct NodeWithScoreStoreComparator {
 	bool operator()(const NodeWithRelativeScoreStore left,
@@ -198,8 +197,8 @@ PackedNode* CompletionTrie::findBestFitting(const std::string term,
 	return lastFittingNode;
 }
 
-void CompletionTrie::print() const {
-	if (!Options::VERBOSE) {
+void CompletionTrie::print(bool verbose) const {
+	if (!verbose) {
 		return;
 	}
 //	std::cout << "============ CompletionTrie ============" << std::endl;

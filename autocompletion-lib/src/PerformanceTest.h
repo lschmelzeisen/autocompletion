@@ -17,10 +17,11 @@
 #include <utility>
 #include <vector>
 
-#include "CompletionTrie.h"
-#include "CompletionTrieBuilder.h"
-#include "SuggestionList.h"
-#include "utils/Utils.h"
+#include <autocompletion/CompletionTrie.h>
+#include <autocompletion/CompletionTrieBuilder.h>
+#include <autocompletion/SuggestionList.h>
+#include <autocompletion/utils/Utils.h>
+
 class PerformanceTest {
 public:
 	static CompletionTrie* runTest(CompletionTrie* trie) {

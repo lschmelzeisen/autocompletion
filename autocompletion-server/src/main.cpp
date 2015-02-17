@@ -10,12 +10,13 @@
 #include <memory>
 #include <string>
 
-#include "storage/CompletionTrie.h"
-#include "storage/CompletionTrieBuilder.h"
+#include <autocompletion/CompletionTrie.h>
+#include <autocompletion/CompletionTrieBuilder.h>
+#include <autocompletion/SuggestionList.h>
+#include <autocompletion/utils/Utils.h>
+
 #include "options/Options.h"
-#include "storage/SuggestionList.h"
-#include "utils/Utils.h"
-#include "server/CompletionServer.h"
+#include "CompletionServer.h"
 
 using namespace std;
 
@@ -50,7 +51,7 @@ int main(int argc, char* argv[]) {
 				Options::GetString(OPTION_LOAD_FILE));
 
 		if (trie->getMemoryConsumption() < 100) {
-			trie->print();
+			trie->print(Options::VERBOSE);
 		}
 
 		//	PerformanceTest::runTest(trie);

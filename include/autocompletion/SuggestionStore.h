@@ -15,8 +15,8 @@
 #include <string>
 #include <set>
 
-#include "PackedNode.h"
-#include "SuggestionList.h"
+#include <autocompletion/PackedNode.h>
+#include <autocompletion/SuggestionList.h>
 
 class PackedNode;
 
