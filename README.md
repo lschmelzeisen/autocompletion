@@ -13,4 +13,4 @@ Building is done with [CMake](http://www.cmake.org/). Only out-of-source-tree bu
     cmake AUTOCOMPLETION_SOURCE_DIR
     make
 
-CMake also supports creation of Eclipse or MSVC project files, so you don't have to use `make`. 
+CMake also supports creation of Eclipse or MSVC project files, so you don't have to use `make`.

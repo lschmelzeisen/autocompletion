@@ -7,7 +7,7 @@ endif()
 # ------------------------------------------------------------------------------
 # Project
 
-project(autocompletion CXX)
+project(autocompletion C CXX)
 set(${PROJECT_NAME}_VERSION "0.0.1")
 
 # Select release build type by default to get optimization flags
@@ -51,11 +51,14 @@ endif()
 
 # --- Enable C++11
 if(COMPILER_GNU_COMPATIBLE)
-    add_compile_options("-std=c++11")
+    if (NOT(CMAKE_CXX_FLAGS MATCHES "-std=c\\+\\+11"))
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    endif()
 endif()
 
 # ------------------------------------------------------------------------------
-# Build subprojects 
+# Build subprojects
 
 add_subdirectory("autocompletion-lib/")
 add_subdirectory("autocompletion-server/")
+add_subdirectory("autocompletion-jni/")
