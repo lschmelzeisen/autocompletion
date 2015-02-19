@@ -197,10 +197,7 @@ PackedNode* CompletionTrie::findBestFitting(const std::string term,
 	return lastFittingNode;
 }
 
-void CompletionTrie::print(bool verbose) const {
-	if (!verbose) {
-		return;
-	}
+void CompletionTrie::print() const {
 //	std::cout << "============ CompletionTrie ============" << std::endl;
 //	u_int64_t node_ptr = reinterpret_cast<u_int64_t>(root)
 //			+ root->getFirstChildOffset();

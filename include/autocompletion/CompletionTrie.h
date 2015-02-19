@@ -58,7 +58,7 @@ public:
 	std::shared_ptr<SuggestionList> getSuggestions(std::string prefix,
 			const int k) const;
 
-	void print(bool verbose) const;
+	void print() const;
 
 	u_int64_t getMemoryConsumption() const {
 		return memSize;

@@ -168,7 +168,8 @@ void CompletionServer::builderThread() {
 			}
 			CompletionTrieBuilder* builder = new CompletionTrieBuilder();
 			builders[index] = builder;
-			builder->print(Options::VERBOSE);
+			if (Options::VERBOSE)
+				builder->print();
 		} else if (msgType == BUILDER_MSG_STOP_BULK) {
 			std::cout << "Received Stop Bulk command for index " << index
 					<< std::endl;
@@ -178,7 +179,8 @@ void CompletionServer::builderThread() {
 						<< "Trying to finish Trie building but no CompletionTrieBuilder exists for index "
 						<< index << "!" << std::endl;
 			} else {
-				builder->print(Options::VERBOSE);
+				if (Options::VERBOSE)
+					builder->print();
 
 				std::map<uint64_t, CompletionTrie*>::iterator lb =
 						trieByIndex.lower_bound(index);

@@ -7,7 +7,7 @@ public class CompletionTrie {
         Autocompletion.initialize();
     }
 
-    public class Suggestion {
+    public static class Suggestion {
         private String suggestion;
         private int relativeScore;
         private String additionalData;
@@ -47,9 +47,9 @@ public class CompletionTrie {
     public native void release();
 
     public native List<Suggestion> getSuggestions(String prefix,
-            int k);
+                                                  int k);
 
-    public native void print(boolean verbose);
+    public native void print();
 
     public native int getMemoryConsumption();
 }

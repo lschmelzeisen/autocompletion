@@ -393,10 +393,7 @@ std::stack<BuilderNode*> CompletionTrieBuilder::findLocus(
 	return resultLocus;
 }
 
-void CompletionTrieBuilder::print(bool verbose) {
-	if (!verbose) {
-		return;
-	}
+void CompletionTrieBuilder::print() {
 	std::cout << "============ CompletionTrieBuilder ============" << std::endl;
 
 	std::deque<BuilderNode*> locus;

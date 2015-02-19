@@ -51,7 +51,8 @@ int main(int argc, char* argv[]) {
 				Options::GetString(OPTION_LOAD_FILE));
 
 		if (trie->getMemoryConsumption() < 100) {
-			trie->print(Options::VERBOSE);
+			if (Options::VERBOSE)
+				trie->print();
 		}
 
 		//	PerformanceTest::runTest(trie);

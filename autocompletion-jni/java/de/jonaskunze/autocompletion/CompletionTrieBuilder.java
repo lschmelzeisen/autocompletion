@@ -21,7 +21,7 @@ public class CompletionTrieBuilder {
 
     public native CompletionTrie generateCompletionTrie();
 
-    public native void print(boolean verbose);
+    public native void print();
 
     public native float getAverageCharsPerNodes();
 
