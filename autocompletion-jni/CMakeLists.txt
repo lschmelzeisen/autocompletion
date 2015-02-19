@@ -30,35 +30,38 @@ add_jar(autocompletion-jar
     SOURCES ${${PROJECT_NAME}_JAVA_SOURCES}
     OUTPUT_NAME autocompletion 
     )
-get_target_property(_jarFile autocompletion-jar JAR_FILE)
-get_target_property(_classDir autocompletion-jar CLASSDIR)
+get_target_property(${PROJECT_NAME}_CLASS_DIR autocompletion-jar CLASSDIR)
 
 # --- generate jni header files
-set(_headerDir "${CMAKE_CURRENT_BINARY_DIR}")
+set(${PROJECT_NAME}_JNI_HEADER_DIR "${CMAKE_CURRENT_BINARY_DIR}/jni-headers")
+set_directory_properties(PROPERTIES
+    ADDITIONAL_MAKE_CLEAN_FILES "${${PROJECT_NAME}_JNI_HEADER_DIR}"
+    )
+    
+add_custom_target(${PROJECT_NAME}_JNI_HEADERS)
+
 foreach(file IN LISTS ${PROJECT_NAME}_JAVA_SOURCES)
     # make relative to java/ directory and remove .java extension
     string(REPLACE "${PROJECT_SOURCE_DIR}/java/" "" base ${file})
-    string(REPLACE ".java" "" base ${base})
+    string(REPLACE ".java" "" base ${base}) 
     
     # make fully qualified class name
     string(REPLACE "/" "." fqcn ${base})
     
-    string(REPLACE "." "_" header ${fqcn})
-    set(header "${header}.h")
-    list(APPEND ${PROJECT_NAME}_JNI_HEADERS "${header}")
-    
-    add_custom_command( 
-        OUTPUT "${header}"
-        COMMAND ${Java_JAVAH_EXECUTABLE}
-            -verbose
-            -classpath ${_classDir}
-            -d ${_headerDir}
-            -jni
-            ${fqcn}
-        )
+    set(target "${PROJECT_NAME}_JNI_HEADER_${fqcn}") 
+    add_custom_target(${target} ${Java_JAVAH_EXECUTABLE}
+        -verbose 
+        -classpath ${${PROJECT_NAME}_CLASS_DIR} 
+        -d ${${PROJECT_NAME}_JNI_HEADER_DIR}
+        -jni
+        ${fqcn})
+    add_dependencies(${PROJECT_NAME}_JNI_HEADERS ${target})
 endforeach()
 
-include_directories(${_classDir} ${_headerDir})
+include_directories(
+    ${${PROJECT_NAME}_CLASS_DIR}
+    ${${PROJECT_NAME}_JNI_HEADER_DIR}
+    )
 
 # ------------------------------------------------------------------------------
 # Source Files
@@ -74,12 +77,14 @@ add_library(${PROJECT_NAME} MODULE
     ${${PROJECT_NAME}_C_SOURCES}
     ${${PROJECT_NAME}_CPP_SOURCES}
     ${${PROJECT_NAME}_HEADERS}
-    ${${PROJECT_NAME}_JNI_HEADERS}
     )
+add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_JNI_HEADERS)
 target_link_libraries(${PROJECT_NAME}
     ${Java_LIBRARIES}
     ${JAVA_JVM_LIBRARY}
-    # dont include ${JNI_LIBRARIES} because it includes awt library
+    # dont include ${JNI_LIBRARIES} because it includes unnecessary awt library
     autocompletion-lib
     )
-set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "autocompletion.jni") 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    OUTPUT_NAME "autocompletion.jni"
+    ) 
