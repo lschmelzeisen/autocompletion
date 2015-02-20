@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 # ------------------------------------------------------------------------------
 # Subproject
 
-project(autocompletion-jni C CXX)
+project(autocompletion-jni CXX)
 set(${PROJECT_NAME}_VERSION "0.0.1")
 
 include_directories(${AUTOCOMPLETION_INCLUDE_DIRS})
@@ -49,8 +49,8 @@ foreach(file IN LISTS ${PROJECT_NAME}_JAVA_SOURCES)
     string(REPLACE "/" "." fqcn ${base})
     
     set(target "${PROJECT_NAME}_JNI_HEADER_${fqcn}") 
-    add_custom_target(${target} ${Java_JAVAH_EXECUTABLE}
-        -verbose 
+    add_custom_target(${target}
+        ${Java_JAVAH_EXECUTABLE}
         -classpath ${${PROJECT_NAME}_CLASS_DIR} 
         -d ${${PROJECT_NAME}_JNI_HEADER_DIR}
         -jni
@@ -66,16 +66,14 @@ include_directories(
 # ------------------------------------------------------------------------------
 # Source Files
 
-file(GLOB_RECURSE ${PROJECT_NAME}_C_SOURCES "src/" "*.c")
-file(GLOB_RECURSE ${PROJECT_NAME}_CPP_SOURCES "src/" "*.cpp")
+file(GLOB_RECURSE ${PROJECT_NAME}_SOURCES "src/" "*.cpp")
 file(GLOB_RECURSE ${PROJECT_NAME}_HEADERS "src/" "*.h") 
 
 # ------------------------------------------------------------------------------
 # Build Process
 
 add_library(${PROJECT_NAME} MODULE
-    ${${PROJECT_NAME}_C_SOURCES}
-    ${${PROJECT_NAME}_CPP_SOURCES}
+    ${${PROJECT_NAME}_SOURCES}
     ${${PROJECT_NAME}_HEADERS}
     )
 add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_JNI_HEADERS)

@@ -7,7 +7,7 @@ endif()
 # ------------------------------------------------------------------------------
 # Project
 
-project(autocompletion C CXX)
+project(autocompletion CXX)
 set(${PROJECT_NAME}_VERSION "0.0.1")
 
 # Select release build type by default to get optimization flags
@@ -51,8 +51,8 @@ endif()
 
 # --- Enable C++11
 if(COMPILER_GNU_COMPATIBLE)
-    if (NOT(CMAKE_CXX_FLAGS MATCHES "-std=c\\+\\+11"))
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    if (NOT(COMPILER_OPTIONS MATCHES "-std=c\\+\\+11"))
+        add_compile_options("-std=c++11")
     endif()
 endif()
 
