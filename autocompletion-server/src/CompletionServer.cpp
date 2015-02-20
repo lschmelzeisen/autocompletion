@@ -166,7 +166,7 @@ void CompletionServer::builderThread() {
 				delete builders[index];
 				builders.erase(index);
 			}
-			CompletionTrieBuilder* builder = new CompletionTrieBuilder();
+			CompletionTrieBuilder* builder = new CompletionTrieBuilder(false);
 			builders[index] = builder;
 			if (Options::VERBOSE)
 				builder->print();

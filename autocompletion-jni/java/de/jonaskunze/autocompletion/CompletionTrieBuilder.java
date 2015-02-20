@@ -5,17 +5,26 @@ public class CompletionTrieBuilder {
         Autocompletion.initialize();
     }
 
-    public static native CompletionTrie buildFromFile(String filename);
+    public static native CompletionTrie buildFromFile(String fileName);
     
-    public static native CompletionTrie buildFromFile(String filename, boolean verbose);
+    public static native CompletionTrie buildFromFile(String fileName,
+                                                      boolean verbose);
+    
+    public static native CompletionTrie buildFromFile(String fileName,
+                                                      boolean verbose,
+                                                      boolean caseSensitive);
     
     private long nativeInstance;
 
     public CompletionTrieBuilder() {
-        init();
+        this(false);
+    }
+    
+    public CompletionTrieBuilder(boolean caseSensitive) {
+        init(caseSensitive);
     }
 
-    private native void init();
+    private native void init(boolean caseSensitive);
 
     public native void release();
 

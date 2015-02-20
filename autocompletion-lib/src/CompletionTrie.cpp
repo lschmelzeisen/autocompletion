@@ -25,9 +25,9 @@ struct NodeWithScoreStoreComparator {
 };
 
 CompletionTrie::CompletionTrie(char* _mem, u_int64_t _memSize,
-		std::shared_ptr<SuggestionStore> _suggestionStore) :
-		root(reinterpret_cast<PackedNode*>(_mem)), mem(_mem), memSize(_memSize), suggestionStore(
-				_suggestionStore) {
+		std::shared_ptr<SuggestionStore> _suggestionStore, bool caseSensitive) :
+		caseSensitive(caseSensitive), root(reinterpret_cast<PackedNode*>(_mem)),
+		mem(_mem), memSize(_memSize), suggestionStore(_suggestionStore) {
 }
 
 CompletionTrie::~CompletionTrie() {
@@ -36,7 +36,8 @@ CompletionTrie::~CompletionTrie() {
 
 std::shared_ptr<SuggestionList> CompletionTrie::getSuggestions(std::string term,
 		const int k) const {
-	std::transform(term.begin(), term.end(), term.begin(), ::tolower);
+	if(!caseSensitive)
+		std::transform(term.begin(), term.end(), term.begin(), ::tolower);
 	auto suggestions = suggestionStore->getSuggestionList(k);
 
 	int termPrefixPos = 0;

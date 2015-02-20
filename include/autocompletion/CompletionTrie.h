@@ -43,7 +43,7 @@ struct NodeWithRelativeScoreStore {
 class CompletionTrie {
 public:
 	CompletionTrie(char* mem, u_int64_t _memSize,
-			std::shared_ptr<SuggestionStore> _suggestionStore);
+			std::shared_ptr<SuggestionStore> _suggestionStore, bool caseSensitive);
 	virtual ~CompletionTrie();
 
 	/**
@@ -65,6 +65,8 @@ public:
 	}
 
 private:
+	bool caseSensitive;
+
 	PackedNode* root;
 
 	/*

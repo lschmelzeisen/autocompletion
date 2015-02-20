@@ -26,40 +26,39 @@ namespace {
 	}
 }
 
-JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_buildFromFile
-  (JNIEnv* env, jclass /*class_*/, jstring filename)
+JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_buildFromFile__Ljava_lang_String_2
+  (JNIEnv* env, jclass class_, jstring fileName)
 {
-	const char* filename_cstr = env->GetStringUTFChars(filename, nullptr);
-
-	CompletionTrie* completionTrie = CompletionTrieBuilder::buildFromFile(filename_cstr);
-
-	jobject completionTrieJava = newCompletionTrieJava(env);
-	NativeInstance<CompletionTrie>::set(env, completionTrieJava, completionTrie);
-
-	env->ReleaseStringUTFChars(filename, filename_cstr);
-
-	return completionTrieJava;
+	return Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_buildFromFile__Ljava_lang_String_2ZZ
+			(env, class_, fileName, JNI_FALSE, JNI_FALSE);
 }
 
-JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_buildFromFile
-  (JNIEnv* env, jclass /*class_*/, jstring filename, jboolean verbose)
+JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_buildFromFile__Ljava_lang_String_2Z
+  (JNIEnv* env, jclass class_, jstring fileName, jboolean verbose)
 {
-	const char* filename_cstr = env->GetStringUTFChars(filename, nullptr);
+	return Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_buildFromFile__Ljava_lang_String_2ZZ
+			(env, class_, fileName, verbose, JNI_FALSE);
+}
 
-	CompletionTrie* completionTrie = CompletionTrieBuilder::buildFromFile(filename_cstr, static_cast<bool>(verbose));
+JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_buildFromFile__Ljava_lang_String_2ZZ
+  (JNIEnv* env, jclass /*class_*/, jstring fileName, jboolean verbose, jboolean caseSensitive)
+{
+	const char* fileName_cstr = env->GetStringUTFChars(fileName, nullptr);
+
+	CompletionTrie* completionTrie = CompletionTrieBuilder::buildFromFile(fileName_cstr, static_cast<bool>(verbose), static_cast<bool>(caseSensitive));
 
 	jobject completionTrieJava = newCompletionTrieJava(env);
 	NativeInstance<CompletionTrie>::set(env, completionTrieJava, completionTrie);
 
-	env->ReleaseStringUTFChars(filename, filename_cstr);
+	env->ReleaseStringUTFChars(fileName, fileName_cstr);
 
 	return completionTrieJava;
 }
 
 JNIEXPORT void JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_init
-  (JNIEnv* env, jobject instance)
+  (JNIEnv* env, jobject instance, jboolean caseSensitive)
 {
-	INSTANCE_SET(new CompletionTrieBuilder);
+	INSTANCE_SET(new CompletionTrieBuilder(static_cast<bool>(caseSensitive)));
 }
 
 JNIEXPORT void JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_release

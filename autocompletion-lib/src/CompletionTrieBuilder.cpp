@@ -56,9 +56,9 @@ BuilderNode* CompletionTrieBuilder::createNode(BuilderNode* parent,
 	return node;
 }
 
-CompletionTrieBuilder::CompletionTrieBuilder() :
-		suggestionStore(std::make_shared<SuggestionStore>()), numberOfCharsStored(
-				0), numberOfWordsStored(0) {
+CompletionTrieBuilder::CompletionTrieBuilder(bool caseSensitive) :
+		caseSensitive(caseSensitive), suggestionStore(std::make_shared<SuggestionStore>()),
+				numberOfCharsStored(0), numberOfWordsStored(0) {
 	root = createNode(nullptr, 0xFFFFFFFF, "");
 }
 
@@ -116,8 +116,8 @@ std::vector<Suggestion> CompletionTrieBuilder::readFile(
 }
 
 CompletionTrie* CompletionTrieBuilder::buildFromFile(
-		const std::string fileName, bool verbose) {
-	CompletionTrieBuilder builder;
+		const std::string fileName, bool verbose, bool caseSenstive) {
+	CompletionTrieBuilder builder(caseSenstive);
 	long start, time;
 
 	if (verbose)
@@ -229,12 +229,13 @@ CompletionTrie* CompletionTrieBuilder::generateCompletionTrie() {
 			reinterpret_cast<u_int64_t>(mem) + memPointer
 					- reinterpret_cast<u_int64_t>(finalMem));
 	delete[] mem;
-	return new CompletionTrie(finalMem, memSize - memPointer, suggestionStore);
+	return new CompletionTrie(finalMem, memSize - memPointer, suggestionStore, caseSensitive);
 }
 
 void CompletionTrieBuilder::addString(std::string str, u_int32_t score,
 		std::string additionalData) {
-	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+	if (!caseSensitive)
+		std::transform(str.begin(), str.end(), str.begin(), ::tolower);
 
 	numberOfCharsStored += str.length();
 	numberOfWordsStored++;

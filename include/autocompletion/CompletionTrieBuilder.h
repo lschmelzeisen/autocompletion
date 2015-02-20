@@ -30,7 +30,7 @@ struct BuilderNodeLayerComparator {
 
 class CompletionTrieBuilder {
 public:
-	CompletionTrieBuilder();
+	CompletionTrieBuilder(bool caseSensitive = false);
 	virtual ~CompletionTrieBuilder();
 
 	void addString(std::string str, u_int32_t score,
@@ -55,12 +55,11 @@ public:
 		return numberOfWordsStored;
 	}
 
-	static CompletionTrie* buildFromFile(const std::string fileName) {
-		return buildFromFile(fileName, false);
-	}
-
-	static CompletionTrie* buildFromFile(const std::string fileName, bool verbose);
+	static CompletionTrie* buildFromFile(const std::string fileName, bool verbose = false,
+			bool caseSensitive = false);
 private:
+	bool caseSensitive;
+
 	BuilderNode* root;
 	std::vector<BuilderNode*> allNodes;
 
