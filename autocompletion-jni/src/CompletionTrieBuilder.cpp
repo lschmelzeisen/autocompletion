@@ -4,6 +4,7 @@
 
 #include <autocompletion/CompletionTrieBuilder.h>
 
+#include "Exceptions.h"
 #include "NativeInstance.h"
 
 class CompletionTrie;
@@ -12,6 +13,14 @@ class CompletionTrie;
 #define INSTANCE_SET(pointer) (NativeInstance<CompletionTrieBuilder>::set(env, instance, (pointer)))
 
 namespace {
+	bool checkAlreadyReleased(JNIEnv* env, jobject instance) {
+		if (INSTANCE == nullptr) {
+			throwAlreadyReleasedException(env, "CompletionTrieBuilder already released.");
+			return true;
+		}
+		return false;
+	}
+
 	jobject newCompletionTrieJava(JNIEnv* env) {
 		return env->NewObject(JNIEnvCache::CompletionTrie, JNIEnvCache::CompletionTrie_Constructor);
 	}
@@ -39,13 +48,18 @@ JNIEXPORT void JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_i
 JNIEXPORT void JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_release
   (JNIEnv* env, jobject instance)
 {
-	delete INSTANCE;
-	INSTANCE_SET(nullptr);
+	if (INSTANCE != nullptr) {
+		delete INSTANCE;
+		INSTANCE_SET(nullptr);
+	}
 }
 
 JNIEXPORT void JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_addString
   (JNIEnv* env, jobject instance, jstring str, jint score, jstring additionalData)
 {
+	if (checkAlreadyReleased(env, instance))
+		return;
+
 	const char* str_cstr = env->GetStringUTFChars(str, nullptr);
 	const char* additionalData_cstr = env->GetStringUTFChars(str, nullptr);
 
@@ -58,6 +72,9 @@ JNIEXPORT void JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_a
 JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_generateCompletionTrie
   (JNIEnv* env, jobject instance)
 {
+	if (checkAlreadyReleased(env, instance))
+		return nullptr;
+
 	jobject completionTrieJava = newCompletionTrieJava(env);
 	NativeInstance<CompletionTrie>::set(env, completionTrieJava, INSTANCE->generateCompletionTrie());
 	return completionTrieJava;
@@ -66,6 +83,9 @@ JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilde
 JNIEXPORT void JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_print
   (JNIEnv* env, jobject instance)
 {
+	if (checkAlreadyReleased(env, instance))
+		return;
+
 	INSTANCE->print();
 	std::cout.flush();
 }
@@ -73,17 +93,26 @@ JNIEXPORT void JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_p
 JNIEXPORT jfloat JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_getAverageCharsPerNodes
   (JNIEnv* env, jobject instance)
 {
+	if (checkAlreadyReleased(env, instance))
+		return 0.0f;
+
 	return static_cast<jfloat>(INSTANCE->getAverageCharsPerNode());
 }
 
 JNIEXPORT jint JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_getNumberOfCharsStored
   (JNIEnv* env, jobject instance)
 {
+	if (checkAlreadyReleased(env, instance))
+		return 0;
+
 	return static_cast<jint>(INSTANCE->getNumberOfCharsStored());
 }
 
 JNIEXPORT jint JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_getNumberOfWordsStored
   (JNIEnv* env, jobject instance)
 {
+	if (checkAlreadyReleased(env, instance))
+		return 0;
+
 	return static_cast<jint>(INSTANCE->getNumberOfWordsStored());
 }

@@ -25,6 +25,8 @@ jfieldID  CompletionTrieBuilder_NativeInstance = nullptr;
 jclass    Suggestion                           = nullptr;
 jmethodID Suggestion_Constructor               = nullptr;
 
+jclass    AlreadyReleasedException             = nullptr;
+
 void init(JNIEnv* env) {
 	ArrayList                            = getGlobalClassRef(env, "java/util/ArrayList");
 	ArrayList_Constructor_Int            = env->GetMethodID(ArrayList, "<init>", "(I)V");
@@ -39,6 +41,8 @@ void init(JNIEnv* env) {
 
 	Suggestion                           = getGlobalClassRef(env, "de/jonaskunze/autocompletion/CompletionTrie$Suggestion");
 	Suggestion_Constructor               = env->GetMethodID(Suggestion, "<init>", "(Ljava/lang/String;ILjava/lang/String;)V");
+
+	AlreadyReleasedException             = getGlobalClassRef(env, "de/jonaskunze/autocompletion/AlreadyReleasedException");
 }
 
 }
