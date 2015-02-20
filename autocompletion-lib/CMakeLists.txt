@@ -8,6 +8,12 @@ set(${PROJECT_NAME}_VERSION "0.0.1")
 
 include_directories(${AUTOCOMPLETION_INCLUDE_DIRS})
 
+# compile as position independant code, because we will dynamically link in
+# autcompletion-jni
+if(COMPILER_GNU_COMPATIBLE)
+    add_compile_options("-fPIC")
+endif()
+
 # ------------------------------------------------------------------------------
 # Source Files
 

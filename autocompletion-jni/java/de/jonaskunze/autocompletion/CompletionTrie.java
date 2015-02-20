@@ -31,18 +31,24 @@ public class CompletionTrie {
         public String getAdditionalData() {
             return additionalData;
         }
-    }
 
-    public CompletionTrie() {
-        init();
+        @Override
+        public String toString() {
+            return "Suggestion [suggestion=" + suggestion + ", relativeScore="
+                    + relativeScore + ", additionalData=" + additionalData
+                    + "]";
+        }
+    }
+    
+    private long nativeInstance;
+
+    private CompletionTrie() {
     }
 
     @Override
     public void finalize() {
         release();
     }
-
-    private native void init();
 
     public native void release();
 
