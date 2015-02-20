@@ -116,15 +116,20 @@ std::vector<Suggestion> CompletionTrieBuilder::readFile(
 }
 
 CompletionTrie* CompletionTrieBuilder::buildFromFile(
-		const std::string fileName) {
+		const std::string fileName, bool verbose) {
 	CompletionTrieBuilder builder;
-	long start = Utils::getCurrentMicroSeconds();
+	long start, time;
+
+	if (verbose)
+		start = Utils::getCurrentMicroSeconds();
+
 	std::vector<Suggestion> nodeValues = readFile(fileName);
 
-	long time = Utils::getCurrentMicroSeconds() - start;
-	std::cout << time / 1000. << " ms for reading file" << std::endl;
-
-	start = Utils::getCurrentMicroSeconds();
+	if (verbose) {
+		time = Utils::getCurrentMicroSeconds() - start;
+		std::cout << time / 1000. << " ms for reading file" << std::endl;
+		start = Utils::getCurrentMicroSeconds();
+	}
 
 	/*
 	 * Fill the Builder with all terms from the file
@@ -133,32 +138,34 @@ CompletionTrie* CompletionTrieBuilder::buildFromFile(
 		builder.addString(nodeValue.suggestion, nodeValue.relativeScore,
 				nodeValue.additionalData);
 	}
-	time = Utils::getCurrentMicroSeconds() - start;
-	std::cout << time / 1000. << " ms for creating builder trie" << std::endl;
 
-	std::cout << "Total memory consumption: " << Utils::GetMemUsage() / 1000000.
-			<< " MB" << std::endl;
-
-	start = Utils::getCurrentMicroSeconds();
+	if (verbose) {
+		time = Utils::getCurrentMicroSeconds() - start;
+		std::cout << time / 1000. << " ms for creating builder trie" << std::endl;
+		std::cout << "Total memory consumption: " << Utils::GetMemUsage() / 1000000.
+				<< " MB" << std::endl;
+		start = Utils::getCurrentMicroSeconds();
+	}
 
 	CompletionTrie* trie = builder.generateCompletionTrie();
 
-	time = Utils::getCurrentMicroSeconds() - start;
-	std::cout << time / 1000. << " ms for creating packed trie with "
-			<< trie->getMemoryConsumption() << " Bytes" << std::endl;
+	if (verbose) {
+		time = Utils::getCurrentMicroSeconds() - start;
+		std::cout << time / 1000. << " ms for creating packed trie with "
+				<< trie->getMemoryConsumption() << " Bytes" << std::endl;
+		std::cout << "Total memory consumption: " << Utils::GetMemUsage() / 1000000.
+				<< " MB" << std::endl;
+		std::cout << "AverageWordLength: " << builder.getNumberOfCharsStored()/(float)builder.getNumberOfWordsStored()
+				<< std::endl;
+		std::cout << "Number of nodes stored: " << builder.getNumberOfNodes()
+				<< std::endl;
+		std::cout << "Average node length: " << builder.getAverageCharsPerNode()
+				<< std::endl;
+		std::cout << "Average Bytes per word: "
+				<< trie->getMemoryConsumption() / (float)builder.getNumberOfWordsStored()
+				<< std::endl;
+	}
 
-	std::cout << "Total memory consumption: " << Utils::GetMemUsage() / 1000000.
-			<< " MB" << std::endl;
-
-	std::cout << "AverageWordLength: " << builder.getNumberOfCharsStored()/(float)builder.getNumberOfWordsStored()
-			<< std::endl;
-	std::cout << "Number of nodes stored: " << builder.getNumberOfNodes()
-			<< std::endl;
-	std::cout << "Average node length: " << builder.getAverageCharsPerNode()
-			<< std::endl;
-	std::cout << "Average Bytes per word: "
-			<< trie->getMemoryConsumption() / (float)builder.getNumberOfWordsStored()
-			<< std::endl;
 	return trie;
 }
 

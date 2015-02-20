@@ -7,6 +7,8 @@ public class CompletionTrieBuilder {
 
     public static native CompletionTrie buildFromFile(String filename);
     
+    public static native CompletionTrie buildFromFile(String filename, boolean verbose);
+    
     private long nativeInstance;
 
     public CompletionTrieBuilder() {

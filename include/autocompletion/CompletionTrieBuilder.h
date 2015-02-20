@@ -55,7 +55,11 @@ public:
 		return numberOfWordsStored;
 	}
 
-	static CompletionTrie* buildFromFile(const std::string fileName);
+	static CompletionTrie* buildFromFile(const std::string fileName) {
+		return buildFromFile(fileName, false);
+	}
+
+	static CompletionTrie* buildFromFile(const std::string fileName, bool verbose);
 private:
 	BuilderNode* root;
 	std::vector<BuilderNode*> allNodes;

@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 
 	if (Options::Isset(OPTION_LOAD_FILE)) {
 		CompletionTrie* trie = CompletionTrieBuilder::buildFromFile(
-				Options::GetString(OPTION_LOAD_FILE));
+				Options::GetString(OPTION_LOAD_FILE), true);
 
 		if (trie->getMemoryConsumption() < 100) {
 			if (Options::VERBOSE)

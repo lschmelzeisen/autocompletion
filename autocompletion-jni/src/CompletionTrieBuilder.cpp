@@ -31,8 +31,25 @@ JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilde
 {
 	const char* filename_cstr = env->GetStringUTFChars(filename, nullptr);
 
+	CompletionTrie* completionTrie = CompletionTrieBuilder::buildFromFile(filename_cstr);
+
 	jobject completionTrieJava = newCompletionTrieJava(env);
-	NativeInstance<CompletionTrie>::set(env, completionTrieJava, CompletionTrieBuilder::buildFromFile(filename_cstr));
+	NativeInstance<CompletionTrie>::set(env, completionTrieJava, completionTrie);
+
+	env->ReleaseStringUTFChars(filename, filename_cstr);
+
+	return completionTrieJava;
+}
+
+JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilder_buildFromFile
+  (JNIEnv* env, jclass /*class_*/, jstring filename, jboolean verbose)
+{
+	const char* filename_cstr = env->GetStringUTFChars(filename, nullptr);
+
+	CompletionTrie* completionTrie = CompletionTrieBuilder::buildFromFile(filename_cstr, static_cast<bool>(verbose));
+
+	jobject completionTrieJava = newCompletionTrieJava(env);
+	NativeInstance<CompletionTrie>::set(env, completionTrieJava, completionTrie);
 
 	env->ReleaseStringUTFChars(filename, filename_cstr);
 
