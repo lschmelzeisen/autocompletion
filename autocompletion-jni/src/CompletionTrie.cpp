@@ -2,12 +2,13 @@
 
 #include <iostream>
 
-#include <jni.h>
+#include <autocompletion/CompletionTrie.h>
+#include <autocompletion/SuggestionList.h>
 
 #include "NativeInstance.h"
 
-#define INSTANCE (getNativeInstance<CompletionTrie>(env, instance))
-#define INSTANCE_SET(pointer) (setNativeInstance<CompletionTrie>(env, instance, (pointer)))
+#define INSTANCE (NativeInstance<CompletionTrie>::get(env, instance))
+#define INSTANCE_SET(pointer) (NativeInstance<CompletionTrie>::set(env, instance, (pointer)))
 
 JNIEXPORT void JNICALL Java_de_jonaskunze_autocompletion_CompletionTrie_release
   (JNIEnv* env, jobject instance)
@@ -19,14 +20,6 @@ JNIEXPORT void JNICALL Java_de_jonaskunze_autocompletion_CompletionTrie_release
 JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrie_getSuggestions
   (JNIEnv* env, jobject instance, jstring prefix, jint k)
 {
-
-	jclass arraylistClass = env->FindClass("java/util/ArrayList");
-	jmethodID arraylistConstructor = env->GetMethodID(arraylistClass, "<init>", "(I)V");
-	jmethodID arraylistAdd = env->GetMethodID(arraylistClass, "add", "(Ljava/lang/Object;)Z");
-
-	jclass suggestionClass = env->FindClass("de/jonaskunze/autocompletion/CompletionTrie$Suggestion");
-	jmethodID suggestionConstructor = env->GetMethodID(suggestionClass, "<init>", "(Ljava/lang/String;ILjava/lang/String;)V");
-
 	const char* prefix_cstr = env->GetStringUTFChars(prefix, nullptr);
 
 	std::shared_ptr<SuggestionList> suggestionList = INSTANCE->getSuggestions(prefix_cstr, k);
@@ -34,14 +27,14 @@ JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrie_getSu
 
 	env->ReleaseStringUTFChars(prefix, prefix_cstr);
 
-	jobject arraylist = env->NewObject(arraylistClass, arraylistConstructor, static_cast<jint>(suggestions.size()));
+	jobject arraylist = env->NewObject(JNIEnvCache::ArrayList, JNIEnvCache::ArrayList_Constructor_Int, static_cast<jint>(suggestions.size()));
 	for (auto suggestion : suggestions) {
 		jstring suggestionSuggestion = env->NewStringUTF(suggestion.suggestion.c_str());
 		jint suggestionRelativeScore = static_cast<jint>(suggestion.relativeScore);
 		jstring suggestionAdditionalData = env->NewStringUTF(suggestion.additionalData.c_str());
 
-		jobject javaSuggestion = env->NewObject(suggestionClass, suggestionConstructor, suggestionSuggestion, suggestionRelativeScore, suggestionAdditionalData);
-		env->CallBooleanMethod(arraylist, arraylistAdd, javaSuggestion);
+		jobject javaSuggestion = env->NewObject(JNIEnvCache::Suggestion, JNIEnvCache::Suggestion_Constructor, suggestionSuggestion, suggestionRelativeScore, suggestionAdditionalData);
+		env->CallBooleanMethod(arraylist, JNIEnvCache::ArrayList_Add_Object, javaSuggestion);
 	}
 
 	return arraylist;

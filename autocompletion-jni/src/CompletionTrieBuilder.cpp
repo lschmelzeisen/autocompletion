@@ -2,19 +2,18 @@
 
 #include <iostream>
 
-#include <jni.h>
+#include <autocompletion/CompletionTrieBuilder.h>
 
 #include "NativeInstance.h"
 
-#define INSTANCE (getNativeInstance<CompletionTrieBuilder>(env, instance))
-#define INSTANCE_SET(pointer) (setNativeInstance<CompletionTrieBuilder>(env, instance, (pointer)))
+class CompletionTrie;
+
+#define INSTANCE (NativeInstance<CompletionTrieBuilder>::get(env, instance))
+#define INSTANCE_SET(pointer) (NativeInstance<CompletionTrieBuilder>::set(env, instance, (pointer)))
 
 namespace {
 	jobject newCompletionTrieJava(JNIEnv* env) {
-		jclass class_ = env->FindClass("de/jonaskunze/autocompletion/CompletionTrie");
-		jmethodID constructor = env->GetMethodID(class_, "<init>", "()V");
-		jobject completionTrieJava = env->NewObject(class_, constructor);
-		return completionTrieJava;
+		return env->NewObject(JNIEnvCache::CompletionTrie, JNIEnvCache::CompletionTrie_Constructor);
 	}
 }
 
@@ -24,7 +23,7 @@ JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilde
 	const char* filename_cstr = env->GetStringUTFChars(filename, nullptr);
 
 	jobject completionTrieJava = newCompletionTrieJava(env);
-	setNativeInstance<CompletionTrie>(env, completionTrieJava, CompletionTrieBuilder::buildFromFile(filename_cstr));
+	NativeInstance<CompletionTrie>::set(env, completionTrieJava, CompletionTrieBuilder::buildFromFile(filename_cstr));
 
 	env->ReleaseStringUTFChars(filename, filename_cstr);
 
@@ -60,7 +59,7 @@ JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilde
   (JNIEnv* env, jobject instance)
 {
 	jobject completionTrieJava = newCompletionTrieJava(env);
-	setNativeInstance<CompletionTrie>(env, completionTrieJava, INSTANCE->generateCompletionTrie());
+	NativeInstance<CompletionTrie>::set(env, completionTrieJava, INSTANCE->generateCompletionTrie());
 	return completionTrieJava;
 }
 

@@ -10,7 +10,11 @@ public class Autocompletion {
         initialized = true;
 
         System.loadLibrary("autocompletion.jni");
+        
+        loadJNIEnvCache();
     }
+    
+    private static native void loadJNIEnvCache();
 
     static {
         initialize();
