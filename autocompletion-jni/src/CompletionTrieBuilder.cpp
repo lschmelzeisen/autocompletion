@@ -45,7 +45,8 @@ JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrieBuilde
 {
 	const char* fileName_cstr = env->GetStringUTFChars(fileName, nullptr);
 
-	CompletionTrie* completionTrie = CompletionTrieBuilder::buildFromFile(fileName_cstr, static_cast<bool>(verbose), static_cast<bool>(caseSensitive));
+	CompletionTrie* completionTrie = CompletionTrieBuilder::buildFromFile(fileName_cstr,
+			static_cast<bool>(verbose), static_cast<bool>(caseSensitive));
 
 	jobject completionTrieJava = newCompletionTrieJava(env);
 	NativeInstance<CompletionTrie>::set(env, completionTrieJava, completionTrie);

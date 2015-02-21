@@ -117,8 +117,9 @@ std::vector<Suggestion> CompletionTrieBuilder::readFile(
 
 CompletionTrie* CompletionTrieBuilder::buildFromFile(
 		const std::string fileName, bool verbose, bool caseSenstive) {
+	std::cout << "caseSensitive: " << (caseSenstive?"yes":"no") << std::endl;
 	CompletionTrieBuilder builder(caseSenstive);
-	long start, time;
+	long start = 0, time = 0;
 
 	if (verbose)
 		start = Utils::getCurrentMicroSeconds();

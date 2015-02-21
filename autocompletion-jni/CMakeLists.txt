@@ -23,14 +23,21 @@ include_directories(${JNI_INCLUDE_DIRS})
 # ------------------------------------------------------------------------------
 # Build Jar
 
-# --- compile java files to jar
 file(GLOB_RECURSE ${PROJECT_NAME}_JAVA_SOURCES "java/" "*.java")
+
+# --- compile java files to jar
 set(CMAKE_JAVA_COMPILE_FLAGS "-source" "1.7" "-target" "1.7")
-add_jar(autocompletion-jar
+add_jar(${PROJECT_NAME}_JAR
     SOURCES ${${PROJECT_NAME}_JAVA_SOURCES}
+    VERSION ${${PROJECT_NAME}_VERSION}
     OUTPUT_NAME autocompletion 
     )
-get_target_property(${PROJECT_NAME}_CLASS_DIR autocompletion-jar CLASSDIR)
+get_target_property(${PROJECT_NAME}_CLASS_DIR ${PROJECT_NAME}_JAR CLASSDIR)
+
+# --- generate sources jar
+add_custom_target(${PROJECT_NAME}_SOURCES_JAR
+    ${Java_JAR_EXECUTABLE} cf "autocompletion-${${PROJECT_NAME}_VERSION}-sources.jar" ${${PROJECT_NAME}_JAVA_SOURCES})
+add_dependencies(${PROJECT_NAME}_JAR ${PROJECT_NAME}_SOURCES_JAR)
 
 # --- generate jni header files
 set(${PROJECT_NAME}_JNI_HEADER_DIR "${CMAKE_CURRENT_BINARY_DIR}/jni-headers")
@@ -39,6 +46,7 @@ set_directory_properties(PROPERTIES
     )
     
 add_custom_target(${PROJECT_NAME}_JNI_HEADERS)
+add_dependencies(${PROJECT_NAME}_JNI_HEADERS ${PROJECT_NAME}_JAR)
 
 foreach(file IN LISTS ${PROJECT_NAME}_JAVA_SOURCES)
     # make relative to java/ directory and remove .java extension
