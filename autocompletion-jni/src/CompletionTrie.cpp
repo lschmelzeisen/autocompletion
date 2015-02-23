@@ -46,20 +46,10 @@ JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrie_getSu
 
 	const char* prefix_cstr = env->GetStringUTFChars(prefix, nullptr);
 
-	long start = Utils::getCurrentMicroSeconds();
-	std::cout << "Getting suggestions..." << std::endl;
-
 	std::shared_ptr<SuggestionList> suggestionList = INSTANCE->getSuggestions(prefix_cstr, k);
-
-	long time = Utils::getCurrentMicroSeconds();
-	std::cout << "Suggestions gotten (took " << (time - start) << "us)" << std::endl;
-
 	std::vector<Suggestion>& suggestions = suggestionList->suggestedWords;
 
 	env->ReleaseStringUTFChars(prefix, prefix_cstr);
-
-	start = Utils::getCurrentMicroSeconds();
-	std::cout << "Creating array list..." << std::endl;
 
 	jobject arraylist = env->NewObject(JNIEnvCache::ArrayList, JNIEnvCache::ArrayList_Constructor_Int, static_cast<jint>(suggestions.size()));
 	for (auto suggestion : suggestions) {
@@ -70,9 +60,6 @@ JNIEXPORT jobject JNICALL Java_de_jonaskunze_autocompletion_CompletionTrie_getSu
 		jobject javaSuggestion = env->NewObject(JNIEnvCache::Suggestion, JNIEnvCache::Suggestion_Constructor, suggestionSuggestion, suggestionRelativeScore, suggestionAdditionalData);
 		env->CallBooleanMethod(arraylist, JNIEnvCache::ArrayList_Add_Object, javaSuggestion);
 	}
-
-	time = Utils::getCurrentMicroSeconds();
-	std::cout << "Array list created (took " << (time - start) << "us)" << std::endl;
 
 	return arraylist;
 }
