@@ -25,6 +25,8 @@ jfieldID  CompletionTrieBuilder_NativeInstance = nullptr;
 jclass    Suggestion                           = nullptr;
 jmethodID Suggestion_Constructor               = nullptr;
 
+jclass    IllegalArgumentException             = nullptr;
+
 jclass    AlreadyReleasedException             = nullptr;
 
 void init(JNIEnv* env) {
@@ -41,6 +43,8 @@ void init(JNIEnv* env) {
 
 	Suggestion                           = getGlobalClassRef(env, "de/jonaskunze/autocompletion/CompletionTrie$Suggestion");
 	Suggestion_Constructor               = env->GetMethodID(Suggestion, "<init>", "(Ljava/lang/String;ILjava/lang/String;)V");
+
+	IllegalArgumentException             = getGlobalClassRef(env, "java/lang/IllegalArgumentException");
 
 	AlreadyReleasedException             = getGlobalClassRef(env, "de/jonaskunze/autocompletion/AlreadyReleasedException");
 }

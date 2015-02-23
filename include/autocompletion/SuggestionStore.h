@@ -41,7 +41,7 @@ public:
 	virtual ~SuggestionStore() {
 	}
 
-	std::shared_ptr<SuggestionList> getSuggestionList(const u_int8_t k) {
+	std::shared_ptr<SuggestionList> getSuggestionList(const unsigned int k) {
 		return std::make_shared < SuggestionList > (k, this);
 	}
 

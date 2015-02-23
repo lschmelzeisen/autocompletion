@@ -19,6 +19,8 @@ extern jfieldID  CompletionTrieBuilder_NativeInstance;
 extern jclass    Suggestion;
 extern jmethodID Suggestion_Constructor;
 
+extern jclass	 IllegalArgumentException;
+
 extern jclass    AlreadyReleasedException;
 
 void init(JNIEnv* env);

@@ -49,14 +49,14 @@ public:
 	/**
 	 * Returns the Node that defines the longest string that has term as substring
 	 *
-	 * @param return_prefixPos The position of the last character in term not defined by the returned
+	 * @param return_prefixPos The position of the first character in term not defined by the returned
 	 *  Node
 	 */
 	PackedNode* findBestFitting(const std::string term, int& return_prefixPos,
 			std::vector<NodeWithRelativeScoreStore>& return_fittingLeafNodes) const;
 
 	std::shared_ptr<SuggestionList> getSuggestions(std::string prefix,
-			const int k) const;
+			const unsigned int k) const;
 
 	void print() const;
 

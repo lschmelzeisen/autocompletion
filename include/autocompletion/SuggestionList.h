@@ -28,8 +28,8 @@ struct SuggestionList {
 	 */
 	std::vector<Suggestion> suggestedWords;
 
-	const u_int8_t k;
-	SuggestionList(const u_int8_t _k, SuggestionStore* _store) :
+	const unsigned int k;
+	SuggestionList(const unsigned int _k, SuggestionStore* _store) :
 			store(_store), suggestedWords(), k(_k) {
 	}
 

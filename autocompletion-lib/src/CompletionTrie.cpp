@@ -35,7 +35,7 @@ CompletionTrie::~CompletionTrie() {
 }
 
 std::shared_ptr<SuggestionList> CompletionTrie::getSuggestions(std::string term,
-		const int k) const {
+		const unsigned int k) const {
 	if(!caseSensitive)
 		std::transform(term.begin(), term.end(), term.begin(), ::tolower);
 	auto suggestions = suggestionStore->getSuggestionList(k);
