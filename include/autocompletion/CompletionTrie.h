@@ -31,11 +31,11 @@ struct NodeWithRelativeScoreStore {
 	u_int32_t relativeScoreOfParent;
 	PackedNode* node;
 	std::string prefix;
-	std::string getString() {
+	std::string getString() const {
 		return prefix + node->getString();
 	}
 
-	u_int32_t getRelativeScore() {
+	u_int32_t getRelativeScore() const {
 		return relativeScoreOfParent - node->getDeltaScore();
 	}
 };

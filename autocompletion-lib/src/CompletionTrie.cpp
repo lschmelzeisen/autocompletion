@@ -11,6 +11,7 @@
 #include <cctype>
 #include <iostream>
 #include <iterator>
+#include <queue>
 
 #include <autocompletion/SuggestionList.h>
 #include <autocompletion/SuggestionStore.h>
@@ -59,17 +60,17 @@ std::shared_ptr<SuggestionList> CompletionTrie::getSuggestions(std::string term,
 		return suggestions;
 	}
 
-	std::vector<NodeWithRelativeScoreStore> nodesByParentScore;
-	nodesByParentScore.push_back( { 0xFFFFFFFF, node, term });
+	typedef std::priority_queue<NodeWithRelativeScoreStore,
+			std::vector<NodeWithRelativeScoreStore>,
+			NodeWithScoreStoreComparator> NodeWithStoreScorePriotityQueue;
+	NodeWithStoreScorePriotityQueue nodesByParentScore;
+	nodesByParentScore.push({ 0xFFFFFFFF, node, term });
 
 	bool isFirstNode = true;
 	while (!nodesByParentScore.empty()) {
-		std::sort(nodesByParentScore.begin(), nodesByParentScore.end(),
-				NodeWithScoreStoreComparator());
 
-		NodeWithRelativeScoreStore nodeWithParentScore =
-				*nodesByParentScore.rbegin();
-		nodesByParentScore.pop_back();
+		const auto nodeWithParentScore = nodesByParentScore.top();
+		nodesByParentScore.pop();
 
 //		std::cout << nodeWithParentScore.getString() << std::endl;
 
@@ -78,30 +79,23 @@ std::shared_ptr<SuggestionList> CompletionTrie::getSuggestions(std::string term,
 			if (suggestions->isFull()) {
 				return suggestions;
 			}
-		}
-
-		/*
-		 * Push first child to priority queue
-		 */
-		if (nodeWithParentScore.node->firstChildOffsetSize_ != 0) {
+		} else {
+			// Push first child to priority queue
 			PackedNode* child = getFirstChild(nodeWithParentScore.node);
-			nodesByParentScore.push_back( {
-					nodeWithParentScore.getRelativeScore(), child,
-					nodeWithParentScore.getString() });
+			nodesByParentScore.push( { nodeWithParentScore.getRelativeScore(),
+					child, nodeWithParentScore.getString() });
 		}
 
-		/*
-		 * Push next sibling to priority queue
-		 */
-		if (!isFirstNode) {
+		if (isFirstNode) {
+			isFirstNode = false;
+		} else {
+			// Push next sibling to priority queue
 			PackedNode* sibling = getNextSibling(nodeWithParentScore.node);
 			if (sibling != nullptr) {
-				nodesByParentScore.push_back(
+				nodesByParentScore.push(
 						{ nodeWithParentScore.relativeScoreOfParent, sibling,
 								nodeWithParentScore.prefix });
 			}
-		} else {
-			isFirstNode = false;
 		}
 	}
 
